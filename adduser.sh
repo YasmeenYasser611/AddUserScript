@@ -23,8 +23,14 @@ read -sp 'Enter a Password: ' PASS
 
 # creating a home directory for the new user
 print_status "Creating a Home Directory For New User"
+cd 
 sudo mkdir /home/${NAME}
 
 # Copying configuration files to user's home dir
-sudo cp /etc/skel/. /home/${HOME}
+sudo cp -r /etc/skel/. /home/${NAME}
 
+# encrypting password
+PASS_ENCRYPTED=$(echo -n "${PASS}" | sha256sum)
+
+# echoing password to make sure it was encrypted successfully
+print_status ${PASS_ENCRYPTED}
