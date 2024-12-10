@@ -64,19 +64,28 @@ FIRST_FREE_UID=$(awk -F: -v min_uid=1000 '$3 >= min_uid {uids[$3]=1} END {for (i
 # Find the first free GID
 FIRST_FREE_GID=$(awk -F: -v min_gid=1000 '$3 >= min_gid {gids[$3]=1} END {for (i=min_gid; i<60000; i++) if (!gids[i]) {print i; exit}}' /etc/group)
 
-# Creating a home directory for the new user
-print_status "Creating a Home Directory for New User"
-sudo mkdir -p /home/${NAME}
 
 # Manually adding the user to /etc/passwd
 #print_status "Adding the user to /etc/passwd"
 #sudo bash -c "echo '${NAME}:x:$FIRST_FREE_UID:$FIRST_FREE_GID:${fullName},${roomNumber},${phoneNumber},${workNumber},${otherInfo}:/home/${NAME}:/bin/bash' >> /etc/passwd"
 
-# Manually adding the user to /etc/group
-#sudo bash -c "echo '${NAME}:x:$FIRST_FREE_GID' >> /etc/group"
 
 # Adding the user to the sudoers group
 #print_status "Granting sudo privileges to the user..."
 #sudo bash -c "echo '${NAME} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
 
 #print_status "User ${NAME} created successfully with sudo privileges."
+
+# creating a home directory for the new user
+print_status "Creating a Home Directory For New User"
+cd 
+sudo mkdir /home/${NAME}
+
+# Copying configuration files to user's home dir
+sudo cp -r /etc/skel/. /home/${NAME}
+
+# encrypting password
+PASS_ENCRYPTED=$(echo -n "${PASS}" | sha256sum)
+
+# echoing password to make sure it was encrypted successfully
+print_status ${PASS_ENCRYPTED}

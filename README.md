@@ -1,3 +1,4 @@
+
 # Linux User Creation Script <img src="logo-linux.png" alt="Custom Icon" width="60" height="70" align="center"/>
 
 This script is designed to create a new user on a Linux system, manually adding the user to the `/etc/passwd`, `/etc/group`, and `/etc/sudoers` files. It also sets up the user's home directory, encrypts the user password and grants them sudo privileges.
@@ -52,3 +53,5 @@ Encrypting the user password.
 ## License
 This script was created by a group of students from the ITI intake 45. It is free to use and modify for educational purposes. If you use or distribute it, please give proper credit.
  
+# Add User Script
+
