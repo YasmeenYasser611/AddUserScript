@@ -25,4 +25,6 @@ read -sp 'Enter a Password: ' PASS
 print_status "Creating a Home Directory For New User"
 sudo mkdir /home/${NAME}
 
+# Copying configuration files to user's home dir
+sudo cp /etc/skel/. /home/${HOME}
 
