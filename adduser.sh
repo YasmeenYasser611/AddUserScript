@@ -105,7 +105,30 @@ print_status "Copying Configurations Files for ${NAME} from /etc/skel"
 sudo cp -r /etc/skel/. /home/${NAME}
 
 # encrypting password
-PASS_ENCRYPTED=$(echo -n "${PASS}" | sha256sum)
+#PASS_ENCRYPTED=$(echo -n "${PASS}" | sha256sum)
+# Generate the encrypted password using openssl
+PASS_ENCRYPTED=$(openssl passwd -6 "$PASS")
+
+# Function to add the user to /etc/shadow
+concat_shadow() {
+    # username:password:lastchg:min:max:warn:inactive:expire
+    local USERNAME=$1
+    local PASSWORD=$2
+    local LASTCHG=0  # Last password change (0 means force password change at first login)
+    local MIN_DAYS=0 # Minimum days before a password change
+    local MAX_DAYS=99999 # Maximum days the password is valid
+    local WARN_DAYS=7    # Days to warn user before password expires
+    local INACTIVE=      # Account inactive period (empty means no limit)
+    local EXPIRE=        # Account expiration date (empty means no limit)
+    local SYMBOL=":"
+
+    local CONCATENATED="${USERNAME}${SYMBOL}${PASSWORD}${SYMBOL}${LASTCHG}${SYMBOL}${MIN_DAYS}${SYMBOL}${MAX_DAYS}${SYMBOL}${WARN_DAYS}${SYMBOL}${INACTIVE}${SYMBOL}${EXPIRE}"
+
+   sudo echo "$CONCATENATED" >> /etc/shadow
+}
+
+# Add the user to /etc/shadow
+concat_shadow "$NAME" "$PASS_ENCRYPTED"
 
 # appending extra info into one string
 INFO="$fullName,$roomNumber,$phoneNumber,$workNumber,$otherInfo"
