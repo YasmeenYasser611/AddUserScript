@@ -2,6 +2,14 @@
 
 # This script takes a user's name and password to create a user with sudo privileges.
 
+# function to print status messages
+print_status() {
+    echo
+    echo "$1"
+}
+
+
+
 # concatenate user line to send to /etc/passwd file
 concat_passwd() {
 	symbol=":"
@@ -23,15 +31,9 @@ concat_prim_group() {
 
 }
 
-# function to print status messages
-print_status() {
-    echo
-    echo "$1"
-}
-
-
 # force user to run the script as root or with sudo privilages
-if [ ! "`whoami`" = "root" ] then
+if [ ! "`whoami`" = "root" ] 
+then
 	echo 
     	echo "Please run script as root or using sudo."
     	exit 1
@@ -124,7 +126,7 @@ print_status "Adding ${NAME}'s Group..."
 echo ${concat_prim_group} >> /etc/group
 
 
-# Adding the user to the sudoers group
+# adding the user to the sudoers group
 #print_status "Granting sudo privileges to the user..."
 #sudo bash -c "echo '${NAME} ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
 
